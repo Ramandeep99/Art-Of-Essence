@@ -1,0 +1,137 @@
+body{
+    margin: 0;
+    background: lightblue;
+    font-family: 'Darker Grotesque', sans-serif;
+    display: flex;
+}
+#scroller{
+    width: 100%;
+    padding: 40px;
+    text-align: center;
+}
+#scroller-text{
+    font-family: 'Josefin Slab', serif;
+    font-size: 25px;
+}
+.block{
+    display: inline-block;
+    margin-top: 90px;
+}
+.block2{
+    display: inline-block;
+    margin: 20px
+}
+.left{
+    text-align: center;
+    width: 26%;
+    border-right: 1px solid grey;
+    padding: 20px;
+    position: fixed;
+}
+.profile-container{
+    
+    margin-top: 3rem;
+}
+.profile-image{
+    border-radius: 50%;
+    width: 170px;
+    border: 1px solid #140c40;
+}
+.profile-name{
+    margin: 30px 0px;
+}
+.count{
+    font-size: 21px;
+    display: inline-block;
+    margin: 30px 10px;
+}
+.button{
+    display: inline-block;
+    margin: 10px 10px ;
+}
+.right{
+    width: 65%;
+    text-align: left;
+    padding: 10px 30px 10px 5px;
+    position: absolute;
+    left: 406px;
+}
+.gallery{
+    margin: 10px 0px 60px 30px;
+    font-family: Sacramento;
+    font-size: 85px;
+}
+.post{
+    width: 100%;
+    box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
+    /* box-shadow: rgba(50, 50, 93, 0.25) 0px 50px 100px -20px, rgba(0, 0, 0, 0.3) 0px 30px 60px -30px, rgba(10, 37, 64, 0.35) 0px -2px 6px 0px inset; */
+    margin: 20px;
+    display: flex;
+    padding: 20px;
+    margin-bottom: 45px;
+}
+.lt{
+    width: 30%;
+}
+.art{
+    width: 100%;
+    height: 305px;
+}
+#p-name{
+    margin-top: 10px;
+    color: grey;
+    text-align: center;
+}
+.price{
+    text-align: center;
+}
+.price del {
+    color: red;
+    text-decoration: none;
+    position: relative;
+}
+.price del:before {
+    content: " ";
+    display: block;
+    width: 100%;
+    border-top: 2px solid rgba(255, 0, 0, 0.8);
+    height: 12px;
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    transform: rotate(-7deg);
+}
+.price ins {
+    color: green;
+    font-size: 32px;
+    text-decoration: none;
+    padding: 1em 1em 1em 0.5em;
+}
+.like-comm-section{
+    text-align: center;
+}
+.lc-section{
+    display: inline-block;
+    font-size: 30px;
+    margin: 20px 40px 10px;
+}
+.fa-heart{
+    color: red;
+}
+
+.rt{
+    width: 60%;
+    padding-top: 30px;
+}
+.blog-para{
+     font-family: 'KoHo', sans-serif; 
+    /* font-family: Cambria, Cochin, Georgia, Times, 'Times New Roman', serif; */
+    font-size: 21px;
+    color: #140c40;
+    min-height: 282px;
+}
+.sell-section{
+    display: flex;
+    margin: 90px 30px 10px 0px;
+    float: right;
+}
