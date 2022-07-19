@@ -19,14 +19,17 @@ const paintingSchema = new mongoose.Schema({
     },
     artist:{
       type: mongoose.Schema.Types.ObjectId,
-      ref: 'Artist'
+      ref: 'USERDATA'
     },
     likesCount:{
       type: Number,
       default: 0
-    }
-    //comments
-}, {timestamps: true});
+    },
+    date: {type: Number, default: new Date().getTime()},
+    start_bid_date: {type: Number, default: new Date().getTime()},
+    bidded: {type: Boolean, default: false},
+    sold: {type: Boolean, default: false}
+  }, {timestamps: true});
 
 var storage = multer.diskStorage({
     destination: function (req, file, cb) {

@@ -61,17 +61,20 @@
                 <ul>
                     <li><a class="nav-itm" href="/feed">Feed</a></li>                
                     <li><a class="nav-itm" href="/artists">Artists</a></li>                
-                    <li><a class="nav-itm" href="/gallery">Gallery</a></li>     
-                    <% if(locals.user){ %>
-                        <span style="margin: 10px 0px 0px 20px; color: blue;"><%= locals.user.name %></span>
+                    <li><a class="nav-itm" href="/gallery">Gallery</a></li> 
+
+                    <% if(user){ %>
+                        <span style="margin: 10px 0px 0px 20px; color: blue; font-size: 25px;"><%= user.name %></span>
                     <% }else{ %>
-                        <li><a href="./login" class="btn btn-primary loginBtn">LogIn/SignUp</a></li>
+                        <li><a href="./login" class="btn btn-primary loginBtn">Signin</a></li>
                     <% } %>           
                 </ul>
             </nav>
         </div>
     
     </div>
+
+    <!-- <%= user %> -->
 
    <section id="sec2">
        <h1>You have a wall, we have a painting!</h1>

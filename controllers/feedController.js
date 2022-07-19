@@ -1,5 +1,5 @@
 const Artist = require('../models/artistModel');
-const Painting = require('../models/paintingModel');
+const Painting = require('../models/item');
 
 module.exports.showFeed = function(req, res){
     Painting.find({})

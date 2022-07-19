@@ -1,4 +1,4 @@
-const Artist = require('../models/artistModel')
+const Artist = require('../models/userModel')
 const Painting = require('../models/paintingModel')
 
 // module.exports.showProfile = function(req, res){

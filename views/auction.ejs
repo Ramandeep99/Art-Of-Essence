@@ -1,134 +1,192 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Auction</title>
-	<link rel="icon" type="image/png" href="https://cdn4.iconfinder.com/data/icons/photo-6/500/142-512.png">
-    <link rel="stylesheet" href="/css/auction.css">
-</head>
-<body>
-  <div id="container"></div>
-	<div class="login page">
-		<div class="form">
-			<h3 class="title">Enter Your Name To Start Bidding!</h3>
-			<input class="usernameInput" type="text" maxlength="14" />
-		</div>
-	</div> 
 
-	<div class="chat page">
-		<div class="getTime" style="display:none;"></div>
-		<div class="time" style="display:none;">15</div>
-		<div class="timer">Bidding will start in : <span id="timer" style="color:red;">00:00</span> (Initial Bid Amt : <span class="init-bid" data-init-bid="99"><%= painting.basePrice %></span>)</div>
-		<div class="left col">
-			<ul class="pages">
-				<li class="chat page">
-					<div class="chatArea">
-						<ul class="messages">
-						</ul>
-						<div class="itemImg"><img src="../<%= painting.painting %>"></div>
-						<span class="current-bidding-price">Current Bidding Price : <%= painting.basePrice %>/-</span>
-						<div class="itemDesc">
-							<h4>Oil Pastel Painting</h4>
-							<table class="specs" align="center">
-								<thead>
-									<tr>
-										<td colspan="2"></td>
-									</tr>
-								</thead>
-								<tbody>
-									<tr>
-										<th>Artist:</th>
-										<td><%= painting.artist.name %> </td>
-									</tr>
-									<tr>
-										<th>Dimensions:</th>
-										<td>37cm × 34cm × 35cm</td>
-									</tr>
-									<tr>
-										<th>Type:</th>
-										<td>Acrylic & Ink on Canvas</td>
-									</tr>
-									<tr>
-										<th>Created In:</th>
-										<td>2020</td>
-									</tr>
-								</tbody>
-							</table>
+<head>
+    <title>bidding</title>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <link rel="stylesheet" href="/css/bootstrap.min.css" />
+    <!-- <link rel="stylesheet" href="/icons/css/all.css" /> -->
+    <link rel="stylesheet" href="/css/styles.css" />
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js" integrity="sha512-894YE6QWD5I59HgZOGReFYm4dnWc1Qt5NtvYSaNcOP+u1T9qYdvdihz0PPSiiqn/+/3e7Jo4EaG7TubfWGUrMQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+	<script src="/js/script.js"></script>
+	<script src="/js/vue.js"></script>
+	<link rel="stylesheet" href="/css/navbar.css">
+</head>
+
+<body style="width: 100%;">
+    
+
+	
+    <nav class="mb-5">
+        <div class="logo">
+            <div class="stage">
+                <div class="layer"></div>
+                <div class="layer"></div>
+                <div class="layer"></div>
+                <div class="layer"></div>
+                <div class="layer"></div>
+                <div class="layer"></div>
+                <div class="layer"></div>
+                <div class="layer"></div>
+                <div class="layer"></div>
+                <div class="layer"></div>
+                <div class="layer"></div>
+                <div class="layer"></div>
+                <div class="layer"></div>
+                <div class="layer"></div>
+                <div class="layer"></div>
+                <div class="layer"></div>
+                <div class="layer"></div>
+                <div class="layer"></div>
+                <div class="layer"></div>
+                <div class="layer"></div>
+              </div>
+        </div>
+        <div id="menu" class="menu">
+            <div class="links">
+                <ul>
+                    <li><a href="/gallery" class="btn-4"><span>Gallery</span></a></li>
+                    <li><a href="/feed" class="btn-4"><span>Feed</span></a></li>
+                    <li><a href="/artists" class="btn-4"><span>Artists</span></a></li>
+                    <li><a href="/auction" class="btn-4"><span>Auction</span></a></li>
+                </ul>
+            </div>
+            <div id="profileName"> 
+                <!-- <button onclick="href='./login'">LogIn/SignUp</button> -->
+                <!-- <% if(locals.user){ %>
+                    <p style="color: blue;"><%= locals.user.name %></p>
+                <% }else{ %>
+                    <div id="button"><a href="./login">Log In</a></div>
+                <% }%> -->
+                <% if(locals.user){ %>
+                    <div id="button"><a href="/logout">Logout</a></div>
+                <% }else{ %>
+                    <div id="button"><a href="./login">Login</a></div>
+                <% }%>
+                
+            </div>
+
+        </div>
+    
+</nav>
+
+
+	
+	<div class="container">
+	<% if (message.type !== "noItem"){ %>  
+
+		<!-- <div class="row">
+			<div class="col-12">
+				<div id="app" class="slider-container">
+					<img src="<%= currentItem[0].painting %>" alt="">
+				</div>
+			</div>
+		</div> -->
+
+		<div class="row">
+			<div class="col-12">
+				<div id="app">
+					<div class="slider-container">
+						<span class="leftArrow" style="display: none;">&lt;</span>
+						<div class="slider">
+							<div class="images">
+								<img src="<%= currentItem[0].painting %>" alt="Image" class="show" id="0" draggable="false" style="left: 0px;">
+							</div>
+							
 						</div>
 					</div>
-				</li>
-
-			</ul>
-		</div>
-		<div class="right col">
-			<ul class="logs"></ul>
-			<div id="options">
+				</div>
 			</div>
-      <div class="all-bidders-log">
-      <ul class="all-bid-logs"></ul>
-      </div>
 		</div>
-		<!-- <input class="inputMessage" placeholder="Type here..."/> -->
-		<div id="buttons" class="btns">
-			<p style="text-align: center;" >To Bid on the current item, please hit the numbers from num pad.</p>
-			<p>
-				<span>500</span>
-				<button class="bid-btns" disabled>0</button>
-			</p>
-			<p>
-				<span>1000</span>
-				<button class="bid-btns" disabled>1</button>
-			</p>
-			<p>
-				<span>1500</span>
-				<button class="bid-btns" disabled>2</button>
-			</p>
-			<p>
-				<span>2000</span>
-				<button class="bid-btns" disabled>3</button>
-			</p>
-			<p>
-				<span>3000</span>
-				<button class="bid-btns" disabled>4</button>
-			</p>
-			<p>
-				<span>4000</span>
-				<button class="bid-btns">5</button>
-			</p>
+
+
+		<div class="circle"></div>
+		<div class="row">
+    		<div class="col-md-6">
+				<div class="info">
+					<div>
+						<p style="font-size: 20px;">Item name: </p>
+						<p style="color: blue;" ><%= currentItem[0].title %></p>
+			
+					</div>
+					<div class="desc">
+						<h4>Details: </h4>
+						<p style="float: right; display:block; width:100%"><%= currentItem[0].description %></p>
+					</div>
+				</div>
+			</div>
+		
+			<div class="col-md-6">
+				<div class="bid">
+					<div class="bid-container">
+						<div class="active-border" id="activeBorder">
+							<div class="circle-bid" id="circle">
+								<div class="circle-content">
+									<h6>Bid Starts In: </h6>
+									<h4 id="endtime"></h4>
+								<!-- <p>Current price: </p>
+								<p style='font-weight: bold;'><%= currentPrice %></p> -->
+							</div>
+						</div>
+					</div>
+				</div>
+				<% if (loggedInUser){ %>
+				<div class="add-bid" style="width: 80%; margin: auto;">
+						<h5>Add a bid</h5>
+						<div class="form-inline d-flex">
+							<span>Current Price: </span>
+							<input class="form-control" style="width: 80%" type="number" value=<%= currentPrice %> min=<%= currentPrice+1 %> />
+							<p style="position: relative; top: 5px; left: 10px">USD</p>
+						</div>
+						<p class="error" style="color: red; margin: 10px 0px"></p>
+					<button class="form-control btn btn-primary" onclick="obj.sendBid()" style="margin-top: 10px">Add</button>
+				</div>
+				<% } %>
+			</div>
 		</div>
+
+		<!-- previous bids -->
+		<div class="row" style="margin: 30px 5px; width: 100%;">
+			<div class="col-md-6">
+				<div class="previous-bids">
+				<h5>Previous bids</h5>
+				<div class="content"> 
+					<% previous_bids.forEach(bid =>{ %>
+						<div>
+							<p><%= bid.address %></p>
+							<h6><%= bid.price %></h6>
+						</div>
+					<% }) %>
+				</div>
+				</div>
+			</div>
+		</div>
+
+		<% } else { %>
+		<div class="row">
+		<div class="col-12">
+			<div style="overflow: auto;"><a href="/" style="display: block; float: left; margin: 5px 10px;">Home</a><a href="/login" style="display: block; float: left; margin: 5px 10px;">Sign in</a><a href="/logout" style="display: block; float: left; margin: 5px 10px;">Sign out</a><a href="/profile" style="display: block; float: left; margin: 5px 10px;">Profile</a></div>
+			<h4>There is no item in the queue </h4>
+		</div>
+	<% } %>
 	</div>
-	<script src="https://code.jquery.com/jquery-1.10.2.min.js"></script>
-  <script src="/js/moment.min.js"></script>
-  <script src="/js/socket.io.js"></script>
-<!--   <script src="/js/bundle.js"></script> -->
-  <script src="/js/jquery.knob.min.js"></script>
-  <script src="/js/auction.js"></script>
-  <script src="/js/timer.js"></script>
 
-	<!-- <script src="http://jquery-custom-scrollbar.rocketmind.pl/jquery.custom-scrollbar.js"></script> -->
-	<script type="text/javascript">
+<!-- <script src="/js/vueapp.js"> </script> -->
+<script src = "/js/jquery.js" ></script>
 
-		$(document).ready(function(){
 
-       // $(".all-bidders-log").customScrollbar({
-       //    updateOnWindowResize: true
-       // });
-			$('.form').removeClass('activate');
-			$('.usernameInput').on('input', function() {
-				if($(this).val().length > 0 ) { 
-					$('.form').addClass('activate');
-				};
-			});
-			$('.usernameInput').on('focusout', function() {
-				if($(this).val().length > 0 ) { 
-					$('.form').addClass('activate');
-				} else {
-					$('.form').removeClass('activate');
-				}
-			});
-		});
-	</script>
 </body>
+
+
 </html>
+
+
+
+
+
+
+
+
+
+
