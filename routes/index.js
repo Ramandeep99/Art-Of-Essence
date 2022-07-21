@@ -37,7 +37,7 @@ let homePage = require('./home.js');
 let loginPage = require('./login.js');
 let profilePage = require('./profile.js');
 let userRoute = require('./userRoutes')
-// router.use(homePage);
+router.use(homePage);
 router.use(loginPage);
 // router.use(profilePage);
 router.use(userRoute)

@@ -5,9 +5,11 @@ const WebSocket = require('ws');
 const wss = new WebSocket.Server({ port: 8080 });
 let Items = require(path.join(__dirname, '../models/index.js')).items;
 let Bids = require(path.join(__dirname, '../models/index.js')).bids;
-let Categories = require(path.join(__dirname, '../models/index.js')).categories;
+// let Categories = require(path.join(__dirname, '../models/index.js')).categories;
 let Users = require(path.join(__dirname, '../models/index.js')).users;
 let Sessions = require(path.join(__dirname, '../models/index.js')).sessions;
+const authenticate = require('./functions').checkAuthenticated
+const setAuthenticatedUser = require('./functions').setAuthenticatedUser
 
 let message = {
     type: 'noItem',
@@ -16,6 +18,7 @@ let message = {
         degree: 0,
         previousBidsUser: [],
         current_price: 0,
+        winner : []
     },
     private: {
         previousBids: [],
@@ -83,7 +86,7 @@ async function pickItem(){
             else {
                 bidLoop();
             }
-            message.content.current_price = check[0].price;
+            message.content.current_price = check[0].basePrice;
         }
         else {
             // there is no item in queue to bid
@@ -97,7 +100,7 @@ async function pickItem(){
 
 pickItem();
 
-router.get('/auction', (req, res)=>{
+router.get('/auction', authenticate,setAuthenticatedUser, (req, res)=>{
     (async ()=>{
         try {
             if(message.type !== 'noItem' && message.content.currentItem[0] !== undefined){
@@ -113,16 +116,18 @@ router.get('/auction', (req, res)=>{
                     let prop = message.content.previousBidsUser[arr[n]];
                     previous_bids.push(prop);
                 }
-                let category = await Categories.find({_id: currentItem[0].category_id});
-                let owner = await Users.find({_id: currentItem[0].user_id});
+                // let category = await Categories.find({_id: currentItem[0].category_id});
+                let owner = await Users.find({_id: currentItem[0].artist});   // artist
                 let currentPrice = message.content.current_price;
                 let previousBids = message.content.previousBidsUser;
                 let startBidDate = message.content.currentItem.start_bid_date
-                res.render('home', {currentItem, previousBids, category, owner, currentPrice, previous_bids, startBidDate, loggedInUser});
+                console.log(message)
+                res.render('auction', {message,currentItem, previousBids, currentPrice, previous_bids, startBidDate, loggedInUser});
             }
             else{
                 let noItem = true;
-                res.render('home', {noItem});
+                let user = await req.user
+                res.render('emptyAuction',  {noItem , user});
             }
         }
         catch(err){
@@ -210,8 +215,13 @@ function bidLoop(){
                 // bonus time finished
                 message.content.degree = 0;
                 if(message.content.previousBidsUser.length > 0){
+                    // console.log(message.content.previousBidsUser)
                     message.type = 'itemSold';
-                    broadcast();
+                    Users.findOne({_id : message.private.previousBids[message.private.previousBids.length-1].user_id}).then(function(result) {
+                        message.content.winner.push(result)
+                        // console.log(result)
+                        broadcast();
+                    })
                     setTimeout(()=>{
                         nextItem();
                     }, 2000);
@@ -226,6 +236,8 @@ function bidLoop(){
     }
 }
 
+
+
 // next item
 function nextItem(){
     message.type = 'nextItem';
@@ -234,12 +246,17 @@ function nextItem(){
         // if item sold
         if(message.content.previousBidsUser.length > 0){
             // update the sold and bidded item
+            // console.log(message.content.previousBidsUser)
+            // console.log(message.private.previousBids[message.private.previousBids.length-1].user_id)
+            
+            
             await Items.updateOne({_id: message.content.currentItem[0]._id}, {bidded: true, sold: true});
             await Bids.create({
                 item_id: message.content.currentItem[0]._id,
-                user_id: message.private.previousBids[message.private.previousBids.length-1].user_id,
+                user_id: message.private.previousBids[message.private.previousBids.length-1].artist,
                 price: message.content.current_price
             });
+            // console.log(message.private.previousBids[message.private.previousBids.length-1].artist)
             // pick a new item in db
             pickItem();
         }

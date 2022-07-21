@@ -13,6 +13,7 @@ const artistsController = require('../controllers/artistsController')
 const profileContainer = require('../controllers/profileController')
 const auctionController = require('../controllers/auctionController')
 const authenticate = require('./functions').checkAuthenticated
+const setAuthenticatedUser = require('./functions').setAuthenticatedUser
 
  //......................Routes for Registration.............................
  
@@ -21,13 +22,13 @@ const authenticate = require('./functions').checkAuthenticated
   * @module normal_user_login_signup
   * @method GET
   */
- router.get('/register', authcontrollers.register_get);
+//  router.get('/register', authcontrollers.register_get);
  /*
   * Routing to register
   * @module normal_user_login_signup
   * @method POST
  */
- router.post('/register', authcontrollers.register_post);
+//  router.post('/register', authcontrollers.register_post);
 
  //......................Routes for Login.....................................
  
@@ -36,33 +37,33 @@ const authenticate = require('./functions').checkAuthenticated
   * @module normal_user_login_signup
   * @method GET
   */
- router.get('/login', authcontrollers.login_get);
+//  router.get('/login', authcontrollers.login_get);
  /**
   * Routing to login
   * @module normal_user_login_signup
   * @method POST
   */
  
- router.post('/login', authcontrollers.login_post);
+//  router.post('/login', authcontrollers.login_post);
 
 
- router.get('/userHome'  , authcontrollers.userHome);
+//  router.get('/userHome'  , authcontrollers.userHome);
 
  
- router.get('/feed' , authenticate, feedControllers.showFeed)
+ router.get('/feed' , authenticate,setAuthenticatedUser, feedControllers.showFeed)
 
 //  router.post('/like/:id',authenticate, feedControllers.likePost);
 
 
-router.get('/gallery',authenticate, galleryController.showGalery);
+router.get('/gallery',authenticate,setAuthenticatedUser, galleryController.showGalery);
 
 
-router.get('/post' ,authenticate, postController.getPainting)
+router.get('/post' ,authenticate,setAuthenticatedUser, postController.getPainting)
 
-router.post('/post',authenticate, postController.uploadPost);
+router.post('/post',authenticate,setAuthenticatedUser, postController.uploadPost);
 
 // artists
-router.get('/artists', artistsController.showArtists);
+router.get('/artists',authenticate,setAuthenticatedUser, artistsController.showArtists);
 
 // user profile 
 router.get('/profile/:id', profileContainer.showProfile);
@@ -74,7 +75,7 @@ router.get('/painting1/:id', postController.getSinglePainting)
 // router.get('/auction', authenticate, auctionController.showAuctionPage);
 
 
-router.get('/logout', authcontrollers.logout_get);
+// router.get('/logout', authcontrollers.logout_get);
 
 
  

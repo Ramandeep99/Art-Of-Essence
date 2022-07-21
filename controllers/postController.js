@@ -21,7 +21,7 @@ module.exports.uploadPost = function(req, res){
         // console.log(req.user._id)
             
     
-        let start_bid_date = new Date().getTime() + 10*60000;
+        let start_bid_date = new Date().getTime() + 10000;
 
         req.user.then(function(result) {
             // console.log(result._id)
