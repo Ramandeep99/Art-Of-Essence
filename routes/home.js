@@ -1,4 +1,5 @@
 const express = require('express');
+const { use } = require( 'passport' );
 const router = express.Router();
 const path  = require('path');
 const WebSocket = require('ws');
@@ -121,7 +122,8 @@ router.get('/auction', authenticate,setAuthenticatedUser, (req, res)=>{
                 let currentPrice = message.content.current_price;
                 let previousBids = message.content.previousBidsUser;
                 let startBidDate = message.content.currentItem.start_bid_date
-                console.log(message)
+                // console.log(previousBids)
+                // console.log(previous_bids)
                 res.render('auction', {message,currentItem, previousBids, currentPrice, previous_bids, startBidDate, loggedInUser});
             }
             else{
@@ -215,7 +217,8 @@ function bidLoop(){
                 // bonus time finished
                 message.content.degree = 0;
                 if(message.content.previousBidsUser.length > 0){
-                    // console.log(message.content.previousBidsUser)
+                    console.log(message.content.previousBids)
+
                     message.type = 'itemSold';
                     Users.findOne({_id : message.private.previousBids[message.private.previousBids.length-1].user_id}).then(function(result) {
                         message.content.winner.push(result)
@@ -253,7 +256,7 @@ function nextItem(){
             await Items.updateOne({_id: message.content.currentItem[0]._id}, {bidded: true, sold: true});
             await Bids.create({
                 item_id: message.content.currentItem[0]._id,
-                user_id: message.private.previousBids[message.private.previousBids.length-1].artist,
+                user_id: message.private.previousBids[message.private.previousBids.length-1].user_id,
                 price: message.content.current_price
             });
             // console.log(message.private.previousBids[message.private.previousBids.length-1].artist)
@@ -288,8 +291,11 @@ wss.on('connection', function connection(ws, req) {
                             if(JSON.parse(checkUser[i].session).passport){
                                 let userId = JSON.parse(checkUser[i].session).passport.user;
                                 let user = await Users.find({_id: userId}, {_id: 1, address: 1});
-                                if(user.length > 0)
+                                if(user.length > 0){
+                                    // console.log(user, 1)
                                     ws.user = user;
+                                    // console.log(ws.user , 2)
+                                }
                                 else
                                     ws.user = undefined;
                             }
@@ -309,19 +315,24 @@ wss.on('connection', function connection(ws, req) {
             ws.user = undefined;
         // console.log(ws.user)
     
-    ws.on('message', function incoming(data) {
+    ws.on('message', async function incoming(data) {
         let parsed = JSON.parse(data);
         if((message.type == 'bidStart' || message.type == 'bonusStart') && parseInt(parsed.price) > message.content.current_price){
             if(ws.user !== undefined){
-                message.content.previousBidsUser.push({price: parsed.price, address: ws.user[0].address});
-                message.private.previousBids.push({price: parsed.price, user_id: ws.user[0]._id, address: ws.user[0].address});
+                // console.log(message.content.previousBidsUser)
+                // console.log(ws.user[0], 3)
+                const user = await Users.findOne({_id : ws.user[ws.user.length-1]._id})
+                console.log(user.name)
+                message.content.previousBidsUser.push({price: parsed.price, user_id: ws.user[0]._id , name : user.name});
+                message.private.previousBids.push({price: parsed.price, user_id: ws.user[0]._id , name : user.name});
                 message.content.current_price = parseInt(parsed.price);
                 global.clearInterval(global.bidStartId);
                 global.clearInterval(global.bonusStartId);
+                // console.log(message.content.previousBidsUser)
                 message.type = 'bidPlaced';
                 broadcast();
                 bidPlaced = true;
-                // start bid timer again 
+                // start bid timer again
                 bidLoop();
             }
         }
@@ -331,3 +342,5 @@ wss.on('connection', function connection(ws, req) {
 
 
 module.exports = router;
+
+// 318 , 219

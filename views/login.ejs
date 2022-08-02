@@ -74,20 +74,10 @@
                                 <input type="password" name="confirm_password" required>
                                 <label>Confirm Password</label>
                               </div>
-
-                                <div>
-                                  <input type="radio" id="artist" name="drone" value="artist"
-                                         checked>
-                                  <label for="huey">Artist</label>
-                                </div>
-                            
-                                <div>
-                                  <input type="radio" id="user" name="drone" value="user">
+                                <div style="display: none;">
+                                  <input type="radio" id="user" name="drone" value="user" checked>
                                   <label for="dewey">User</label>
                                 </div>
-                            
-                                
-                            
                               
                                 <button class="btn" type="submit">Sign Up</button>
                             </form>
@@ -234,8 +224,9 @@ $('.tab a').on('click', function (e) {
                 const email = formFields.email.value;
                 const password = formFields.password.value;
                 const confirm_password = formFields.confirm_password.value
-                const artistCheck = document.getElementById('artist').checked
+                // const artistCheck = document.getElementById('artist').checked
                 const userCheck = document.getElementById('user').checked
+                console.log(userCheck)
                 // console.log(name , email, password , confirm_password , artistCheck , userCheck)
                 if(userCheck){
                   try {
@@ -254,28 +245,13 @@ $('.tab a').on('click', function (e) {
                     })
 
                     const data = await res.json();
-                    // console.log(data.registered)
-                    // // console.log(data['email']);
-                    // if (data['email']) {
-                    //     email_error.innerHTML = '<div class="alert alert-warning">Please enter valid email id.</div>';
-                    //     setTimeout(() => {
-                    //         email_error.innerHTML = '';
-                    //     }, 3000)
-                    // }
-
-                    // if (data.password) {
-                    //     password_error.innerHTML = '<div class="alert alert-warning">Please enter correct password.</div>';
-                    //     setTimeout(() => {
-                    //         password_error.innerHTML = '';
-                    //     }, 3000)
-
-                    // }
+                  
                         if (data.registered) {
                             location.assign('/login');
                         }
-                      } catch (err) {
-                          console.log(err);
-                      }
+                    } catch (err) {
+                        console.log(err);
+                    }
 
                     }
               else{

@@ -7,6 +7,8 @@ const userSchema = new Schema({
     password: String,
     address: String,
     phone: String,
+    followers: [{ type: Schema.Types.ObjectId, ref: 'users' }],
+    following: [{ type: Schema.Types.ObjectId, ref: 'users' }],
 },
 { collection: 'users' });
 

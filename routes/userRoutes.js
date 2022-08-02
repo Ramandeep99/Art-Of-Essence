@@ -52,7 +52,7 @@ const setAuthenticatedUser = require('./functions').setAuthenticatedUser
  
  router.get('/feed' , authenticate,setAuthenticatedUser, feedControllers.showFeed)
 
-//  router.post('/like/:id',authenticate, feedControllers.likePost);
+ router.put('/like/:id',authenticate, feedControllers.likePost);
 
 
 router.get('/gallery',authenticate,setAuthenticatedUser, galleryController.showGalery);
@@ -66,19 +66,17 @@ router.post('/post',authenticate,setAuthenticatedUser, postController.uploadPost
 router.get('/artists',authenticate,setAuthenticatedUser, artistsController.showArtists);
 
 // user profile 
-router.get('/profile/:id', profileContainer.showProfile);
+router.get('/profile/:id',authenticate,setAuthenticatedUser, profileContainer.showProfile);
 
 // single painting page
-router.get('/painting1/:id', postController.getSinglePainting)
+router.get('/painting1/:id', authenticate,setAuthenticatedUser, postController.getSinglePainting)
 
-// auction
-// router.get('/auction', authenticate, auctionController.showAuctionPage);
+
+router.put('/follow/:id' , authenticate ,setAuthenticatedUser, profileContainer.follow_put);
 
 
 // router.get('/logout', authcontrollers.logout_get);
 
-
- 
  /**
   * @exports  normal_user_login_signup
   */

@@ -29,59 +29,65 @@
                     <p class="name"><a href="/profile/<%= artist.id %>"><%= artist.name %></a></p>
                     <p><i class="fas fa-map-marker-alt"></i>Germany</p>
                 </summary>
-                <button class="follow">Follow</button>
+                <!-- <button class="follow">Follow</button> -->
+                <% if(artist.followers.includes(user._id)) { %>
+                    <div class="follow">
+                        <a type="button" class="btn btn-secondary" onclick="follow_func(event)"
+                            data-post-id="<%= artist._id %>" id="follow_btn"> Unfollow </a>
+                    </div>
+                <% } else { %>
+                    <div class="follow">
+                        <a type="button" class="btn btn-secondary" onclick="follow_func(event)"
+                            data-post-id="<%= artist._id %>" id="follow_btn"> Follow </a>
+                    </div>
+                <% } %>
                 <hr>
             </div>
         <% } %>
-        <!-- <div class="artist">
-            <span class="count">01</span>
-            <img src="images/profile1.png" class="profile-image">
-            <summary class="about">
-                <p class="name"><a href="#">Fintan Whelton</a></p>
-                <p><i class="fas fa-map-marker-alt"></i>Germany</p>
-            </summary>
-            <button class="follow">Follow</button>
-        </div>
         
-        <div class="artist">
-            <span class="count">02</span>
-            <img src="images/profile1.png" class="profile-image">
-            <summary class="about">
-                <p class="name"><a href="#">Irina Kitaeva</a></p>
-                <p><i class="fas fa-map-marker-alt"></i>San Francisco</p>
-            </summary>
-            <button class="follow">Follow</button>
-        </div>
-
-        <div class="artist">
-            <span class="count">03</span>
-            <img src="images/profile1.png" class="profile-image">
-            <summary class="about">
-                <p class="name"><a href="#">Alex Senchenko</a></p>
-                <p><i class="fas fa-map-marker-alt"></i>New Delhi</p>
-            </summary>
-            <button class="follow">Follow</button>
-        </div>
-
-        <div class="artist">
-            <span class="count">04</span>
-            <img src="images/profile1.png" class="profile-image">
-            <summary class="about">
-                <p class="name"><a href="#">Rashna Hackett</a></p>
-                <p><i class="fas fa-map-marker-alt"></i>Los Angeles</p>
-            </summary>
-            <button class="follow">Follow</button>
-        </div>
-
-        <div class="artist">
-            <span class="count">05</span>
-            <img src="images/profile1.png" class="profile-image">
-            <summary class="about">
-                <p class="name"><a href="#">Peter Notrett</a></p>
-                <p><i class="fas fa-map-marker-alt"></i>London</p>
-            </summary>
-            <button class="follow">Follow</button>
-        </div> -->
     </div>
+
+    <script>
+        // follow follower section
+    const follow = document.getElementById('follow_btn');
+
+const follow_func = async (e) => {
+
+    e.preventDefault();
+
+    var toggleButtonText = {
+        Follow: function (button) {
+            button.textContent = "Unfollow";
+        },
+        Unfollow: function (button) {
+            button.textContent = "Follow";
+        }
+    };
+
+    var postId = event.target.dataset.postId;
+
+    var action = event.target.textContent.trim();
+    // console.log(action)
+    toggleButtonText[action](event.target);
+    
+    try {
+        const followUser = await fetch(`/follow/${postId}` , {
+            method: 'PUT',
+            headers: {
+                "Content-Type": "application/json"
+            }
+        });
+
+        const url = await followUser.url
+        // console.log(url)
+
+        location.reload(url);
+
+    }
+    catch (err) {
+        console.log(err)
+    }
+};
+    </script>
 </body>
 </html>

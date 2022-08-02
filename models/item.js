@@ -23,10 +23,7 @@ const ItemSchema = new Schema({
       type: mongoose.Schema.Types.ObjectId,
       ref: 'users'
     },
-    likesCount:{
-      type: Number,
-      default: 0
-    },
+    likes: [{ type: Schema.Types.ObjectId, ref: 'users' }],
     date: {type: Number, default: new Date().getTime()},
     start_bid_date: {type: Number, default: new Date().getTime()},
     bidded: {type: Boolean, default: false},

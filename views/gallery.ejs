@@ -72,10 +72,23 @@
                             <p class="blog-para"> 
                                 <%= post.description %>
                             </p>
-                            <div class="sell-section">
-                                <a href="/auction/<%= post.id %>" class="btn btn-lg btn-primary">Wanna Buy?</a>
-                                <!-- <button class="btn btn-primary btn-lg" onclick=myFunc()>Wanna Buy?</button> -->
-                            </div>
+                            <% if(post.bidded == true && post.sold == true){ %>
+                                <div class="sell-section">
+                                    <a href="/painting1/<%= post.id %>" class="btn btn-lg btn-primary">SOLD</a>
+                                    <!-- <button class="btn btn-primary btn-lg" onclick=myFunc()>Wanna Buy?</button> -->
+                                </div>
+                                <% } else if(post.bidded == true) { %>
+                                    
+                                    <div class="sell-section">
+                                        <a href="/painting1/<%= post.id %>" class="btn btn-lg btn-primary">Unsold, Auction Completed!</a>
+                                        <!-- <button class="btn btn-primary btn-lg" onclick=myFunc()>Wanna Buy?</button> -->
+                                    </div>
+                                <% } else { %>
+                                    <div class="sell-section">
+                                        <a href="/painting1/<%= post.id %>" class="btn btn-lg btn-primary">Time</a>
+                                        <!-- <button class="btn btn-primary btn-lg" onclick=myFunc()>Wanna Buy?</button> -->
+                                    </div>
+                                <% } %>
                         </div>
                     </div>
                 </div>

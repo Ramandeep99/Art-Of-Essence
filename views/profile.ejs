@@ -24,6 +24,7 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css" integrity="sha512-iBBXm8fW90+nuLcSKlbmrPcLa0OT92xO1BIsZ+ywDWZCvqsWgccV3gFoRBv0z+8dLJgyAHIhR35VZc2oM/gI1w==" crossorigin="anonymous" />
     <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/js/all.min.js" integrity="sha512-RXf+QSDCUQs5uwRKaDoXt55jygZZm2V++WUZduaU/Ui/9EGp3f/2KZVahFZBKGH0s774sd3HmrhUy+SgOFQLVQ==" crossorigin="anonymous"></script>
     
+    <link rel="stylesheet" href="css/feed.css">
     
 </head>
 <body>
@@ -41,18 +42,36 @@
         </div>
         <h3 class="profile-name"><%= artist.name %></h3>
         <div class="posts count">
-            <%= artist.posts.length %>
+            <%= posts.length %>
             <br>
             <h4>Posts</h4>
         </div>
         <div class="follwers count">
-            500
+            <!-- 500
             <br>
-            <h4>Followers</h4>
+            <h4>Followers</h4> -->
+            <p>Follower <strong class="mx-2">
+                <%= artist.followers.length %>
+            </strong></p>
+            <p>Following <strong class="mx-2">
+                <%= artist.following.length %>
+            </strong> </p>
         </div>
         <br>
-        <div class="f button"> 
-            <button type="button" class="btn btn-primary">Follow</button>
+        <div class="f button">
+            <!-- <button type="button" class="btn btn-primary">Follow</button> -->.
+            <% if(artist.followers.includes(otherUser._id)) { %>
+                <div class="new_blog mt-4">
+                    <a type="button" class="btn btn-secondary" onclick="follow_func(event)"
+                        data-post-id="<%= artist._id %>" id="follow_btn"> Unfollow </a>
+                </div>
+            <% } else { %>
+                <div class="new_blog mt-4">
+                    <a type="button" class="btn btn-secondary" onclick="follow_func(event)"
+                        data-post-id="<%= artist._id %>" id="follow_btn"> Follow </a>
+                </div>
+            <% } %>
+
         </div>
         <div class="m button">
             <button type="button" class="btn btn-dark">Message</button>
@@ -60,8 +79,8 @@
     </div>
 
     <div class="right block">
-        <h1 class="gallery">Gallery...</h1>
-        <% for(post of artist.posts){ %>
+        <h1 class="gallery">Your Paintings...</h1>
+        <% for(post of posts){ %>
             <div class="post" data-aos="zoom-in-left">
                 <div class="painting lt block2">
                     <img src= "<%= '../'+post.painting %>" class="art">
@@ -88,230 +107,33 @@
                     <p class="blog-para"> 
                         <%= post.description %>
                     </p>
-                    <div class="sell-section">
-                        <a href="/buy/<%= post.id %>" class="btn btn-lg btn-primary">Wanna Buy?</a>
-                        <!-- <button class="btn btn-primary btn-lg" onclick=myFunc()>Wanna Buy?</button> -->
-                        
-                    </div>
+                    <% if(post.bidded == true && post.sold == true){ %>
+                        <div class="sell-section">
+                            <a href="" class="btn btn-lg btn-primary">SOLD</a>
+                            <!-- <button class="btn btn-primary btn-lg" onclick=myFunc()>Wanna Buy?</button> -->
+                        </div>
+                        <% } else if(post.bidded == true) { %>
+                            
+                            <div class="sell-section">
+                                <a href="" class="btn btn-lg btn-primary">Unsold, Auction Completed!</a>
+                                <!-- <button class="btn btn-primary btn-lg" onclick=myFunc()>Wanna Buy?</button> -->
+                            </div>
+                        <% } else { %>
+                            <div class="sell-section">
+                                <a href="/painting1/<%= post.id %>" class="btn btn-lg btn-primary">Buy</a>
+                                <!-- <button class="btn btn-primary btn-lg" onclick=myFunc()>Wanna Buy?</button> -->
+                            </div>
+                        <% } %>
                 </div>
             </div>
         <% } %>
-        <!--<div class="post" data-aos="zoom-in-left">
-             <div class="painting lt block2">
-                <img src="/images/painting1.jpg" class="art">
-                <p id="p-name">Old Guitarist Oil painting</p>
-                <div class="price">
-                    <del>
-                      <span class="amount">₹6,500</span>
-                    </del>
-                    <ins>
-                      <span class="amount">₹5,000</span>
-                    </ins>
-                </div>
-            
-                <div class="like-comm-section">
-                    <div class="lc-section">
-                        <span><i class="fas fa-heart"></i></span>
-                    </div>
-                    <div class="lc-section">
-                        <span><i class="far fa-comment"></i></span>
-                    </div>
-                </div>
-            </div>
-            <div class="blog rt block2">
-                <p class="blog-para"> 
-                    Lorem ipsum dolor sit amet consectetur adipisicing elit. Assumenda praesentium
-                    vel error, sapiente laboriosam non dignissimos perferendis, aliquam, et cupiditate 
-                    voluptas ipsam eligendi velit eum. Cupiditate maxime neque iste commodi ut. Omnis
-                    accusantium maiores libero asperiores, tempora, quasi optio a iure repellendus 
-                    adipisci cupiditate beatae rerum eum placeat molestias expedita.
-                </p>
-                <div class="sell-section">
-                    <button class="btn btn-primary btn-lg" onclick="confirmFunc()">Wanna Buy?</button>
-                </div>
-            </div>
-        </div>
-
-        <div class="post" data-aos="zoom-in-left">
-            <div class="painting lt block2">
-                <img src="/images/painting2.jpg" class="art">
-                <p id="p-name">Old Guitarist Oil painting</p>
-                <div class="price">
-                    <del>
-                      <span class="amount">₹6,500</span>
-                    </del>
-                    <ins>
-                      <span class="amount">₹5,000</span>
-                    </ins>
-                  </div>
-                  <div class="like-comm-section">
-                    <div class="lc-section">
-                        <span><i class="fas fa-heart"></i></span>
-                    </div>
-                    <div class="lc-section">
-                        <span><i class="far fa-comment"></i></span>
-                    </div>
-                </div>
-            </div>
-            <div class="blog rt block2" >
-                <p class="blog-para"> 
-                    Lorem ipsum dolor sit amet consectetur adipisicing elit. Assumenda praesentium
-                    vel error, sapiente laboriosam non dignissimos perferendis, aliquam, et cupiditate 
-                    voluptas ipsam eligendi velit eum. Cupiditate maxime neque iste commodi ut. Omnis
-                    accusantium maiores libero asperiores, tempora, quasi optio a iure repellendus 
-                    adipisci cupiditate beatae rerum eum placeat molestias expedita.
-                </p>
-                <div class="sell-section">
-                    <button class="btn btn-primary btn-lg">Wanna Buy?</button>
-                </div>
-            </div>
-        </div>
-
-        <div class="post" data-aos="zoom-in-left">
-            <div class="painting lt block2">
-                <img src="/images/painting3.jpg" class="art">
-                <p id="p-name">Old Guitarist Oil painting</p>
-                <div class="price">
-                    <del>
-                      <span class="amount">₹6,500</span>
-                    </del>
-                    <ins>
-                      <span class="amount">₹5,000</span>
-                    </ins>
-                  </div>
-                  <div class="like-comm-section">
-                    <div class="lc-section">
-                        <span><i class="fas fa-heart"></i></span>
-                    </div>
-                    <div class="lc-section">
-                        <span><i class="far fa-comment"></i></span>
-                    </div>
-                </div>
-            </div>
-            <div class="blog rt block2" >
-                <p class="blog-para">
-                    Lorem ipsum dolor sit amet consectetur adipisicing elit. Assumenda praesentium
-                    vel error, sapiente laboriosam non dignissimos perferendis, aliquam, et cupiditate 
-                    voluptas ipsam eligendi velit eum. Cupiditate maxime neque iste commodi ut. Omnis
-                    accusantium maiores libero asperiores, tempora, quasi optio a iure repellendus 
-                    adipisci cupiditate beatae rerum eum placeat molestias expedita.
-                </p>
-                <div class="sell-section">
-                    <button class="btn btn-primary btn-lg">Wanna Buy?</button>
-                </div>
-            </div>
-        </div>
-
-        <div class="post" data-aos="zoom-in-left">
-            <div class="painting lt block2">
-                <img src="/images/painting2.jpg" class="art">
-                <p id="p-name">Old Guitarist Oil painting</p>
-                <div class="price">
-                    <del>
-                      <span class="amount">₹6,500</span>
-                    </del>
-                    <ins>
-                      <span class="amount">₹5,000</span>
-                    </ins>
-                  </div>
-                  <div class="like-comm-section">
-                    <div class="lc-section">
-                        <span><i class="fas fa-heart"></i></span>
-                    </div>
-                    <div class="lc-section">
-                        <span><i class="far fa-comment"></i></span>
-                    </div>
-                </div>
-            </div>
-            <div class="blog rt block2" >
-                <p class="blog-para"> 
-                    Lorem ipsum dolor sit amet consectetur adipisicing elit. Assumenda praesentium
-                    vel error, sapiente laboriosam non dignissimos perferendis, aliquam, et cupiditate 
-                    voluptas ipsam eligendi velit eum. Cupiditate maxime neque iste commodi ut. Omnis
-                    accusantium maiores libero asperiores, tempora, quasi optio a iure repellendus 
-                    adipisci cupiditate beatae rerum eum placeat molestias expedita.
-                </p>
-                <div class="sell-section">
-                    <button class="btn btn-primary btn-lg">Wanna Buy?</button>
-                </div>
-            </div>
-        </div>
-
-        <div class="post" data-aos="zoom-in-left">
-            <div class="painting lt block2">
-                <img src="/images/painting2.jpg" class="art">
-                <p id="p-name">Old Guitarist Oil painting</p>
-                <div class="price">
-                    <del>
-                      <span class="amount">₹6,500</span>
-                    </del>
-                    <ins>
-                      <span class="amount">₹5,000</span>
-                    </ins>
-                  </div>
-                  <div class="like-comm-section">
-                    <div class="lc-section">
-                        <span><i class="fas fa-heart"></i></span>
-                    </div>
-                    <div class="lc-section">
-                        <span><i class="far fa-comment"></i></span>
-                    </div>
-                </div>
-            </div>
-            <div class="blog rt block2" >
-                <p class="blog-para"> 
-                    Lorem ipsum dolor sit amet consectetur adipisicing elit. Assumenda praesentium
-                    vel error, sapiente laboriosam non dignissimos perferendis, aliquam, et cupiditate 
-                    voluptas ipsam eligendi velit eum. Cupiditate maxime neque iste commodi ut. Omnis
-                    accusantium maiores libero asperiores, tempora, quasi optio a iure repellendus 
-                    adipisci cupiditate beatae rerum eum placeat molestias expedita.
-                </p>
-                <div class="sell-section">
-                    <button class="btn btn-primary btn-lg">Wanna Buy?</button>
-                </div>
-            </div>
-        </div>
-
-        <div class="post" data-aos="zoom-in-left">
-            <div class="painting lt block2">
-                <img src="/images/painting2.jpg" class="art">
-                <p id="p-name">Old Guitarist Oil painting</p>
-                <div class="price">
-                    <del>
-                      <span class="amount">₹6,500</span>
-                    </del>
-                    <ins>
-                      <span class="amount">₹5,000</span>
-                    </ins>
-                  </div>
-                  <div class="like-comm-section">
-                    <div class="lc-section">
-                        <span><i class="fas fa-heart"></i></span>
-                    </div>
-                    <div class="lc-section">
-                        <span><i class="far fa-comment"></i></span>
-                    </div>
-                </div>
-            </div>
-            <div class="blog rt block2" >
-                <p class="blog-para"> 
-                    Lorem ipsum dolor sit amet consectetur adipisicing elit. Assumenda praesentium
-                    vel error, sapiente laboriosam non dignissimos perferendis, aliquam, et cupiditate 
-                    voluptas ipsam eligendi velit eum. Cupiditate maxime neque iste commodi ut. Omnis
-                    accusantium maiores libero asperiores, tempora, quasi optio a iure repellendus 
-                    adipisci cupiditate beatae rerum eum placeat molestias expedita.
-                </p>
-                <div class="sell-section">
-                    <button class="btn btn-primary btn-lg">Wanna Buy?</button>
-                </div>
-            </div>
-        </div> -->
+        
     </div>
     <script>AOS.init();</script>
     <script>
-    $(document).ready(function(){
-        $('body,html').animate({scrollTop: 2800}, 12000);
-    });
+    // $(document).ready(function(){
+    //     $('body,html').animate({scrollTop: 2800}, 12000);
+    // });
 
     // function confirmFunc(){
     //     var result = confirm("Are you sure you want to bid on this painting?");
@@ -324,6 +146,49 @@
     // function myFunc(){
     //     return window.location.href = '/buy/<%= post.id %>'
     // }
+
+
+    // follow follower section
+    const follow = document.getElementById('follow_btn');
+
+            const follow_func = async (e) => {
+
+                e.preventDefault();
+
+                var toggleButtonText = {
+                    Follow: function (button) {
+                        button.textContent = "Unfollow";
+                    },
+                    Unfollow: function (button) {
+                        button.textContent = "Follow";
+                    }
+                };
+
+                var postId = event.target.dataset.postId;
+
+                var action = event.target.textContent.trim();
+                // console.log(action)
+                toggleButtonText[action](event.target);
+
+                try {
+                    const followUser = await fetch(`/follow/${postId}` , {
+                        method: 'PUT',
+                        headers: {
+                            "Content-Type": "application/json"
+                        }
+                    });
+
+                    const url = await followUser.url
+                    // console.log(data.status)
+
+                    location.reload(url);
+
+                }
+                catch (err) {
+                    console.log(err)
+                }
+            };
+
 </script>
 </body>
 </html>

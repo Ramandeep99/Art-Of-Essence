@@ -60,23 +60,83 @@
                             </div>
                         
                             <div class="like-comm-section">
-                                <div class="lc-section">
+                                <!-- <div class="lc-section">
                                     <span class="hei"><%= post.likesCount %></span>
                                     <button onclick="actOnPost(event)" data-post-id="<%= post.id %>" class="l-btn"><span><i class="fas fa-heart"></i></span></button>
-                                </div>
-                                <div class="lc-section">
+                                </div> -->
+                                <div class="lc-s5ection">
+                                <% if(post.likes.includes(user._id)) { %>
+                                    <div class="qwe">
+                                        
+                                        <i class="fa fa-heart lubt" id="likn" aria-hidden="true"></i>
+                                        <button class="btn-secondary like-review lubt" onclick="like_func(event);"
+                                        data-post-id="<%= post.id %>"
+                                        id="like_btn">
+                                        Unlike  
+                                        
+                                        </button>
+
+                                        <!-- <button onclick="like_func(event);"
+                                            data-post-id="<%= post.id %>" class=""
+                                            id="like_btn">
+                                            Unlike
+                                        </button> -->
+
+                                        <span class="hei" id="likes-count-<%= post.id %>">
+                                            <%= post.likes.length %>
+                                        </span>
+                                    </div>
+                                    <% } else { %>
+                                        <div class="qwe">
+                                            <i class="fa fa-heart" id="likn" aria-hidden="true"></i>
+                                            <button class="btn-secondary like-review lubt" onclick="like_func(event);"
+                                                data-post-id="<%= post.id %>"
+                                                id="like_btn">
+                                                Like  
+                                                
+                                            </button>
+ 
+
+                                            <!-- <button onclick="like_func(event);"
+                                                data-post-id="<%= post.id %>" class=""
+                                                id="like_btn">
+                                                Like
+                                            </button> -->
+
+                                            <span class="hei" id="likes-count-<%= post.id %>">
+                                                <%= post.likes.length %>
+                                            </span>
+                                        </div>
+                                        <% } %>
+                                    </div>
+
+
+                                <!-- <div class="lc-section">
                                     <span><i class="far fa-comment"></i></span>
-                                </div>
+                                </div> -->
                             </div>
                         </div>
                         <div class="blog rt block2">
                             <p class="blog-para"> 
                                 <%= post.description %>
                             </p>
+                            <% if(post.bidded == true && post.sold == true){ %>
                             <div class="sell-section">
-                                <a href="/painting1/<%= post.id %>" class="btn btn-lg btn-primary">Wanna Buy?</a>
+                                <a href="" class="btn btn-lg btn-primary">SOLD</a>
                                 <!-- <button class="btn btn-primary btn-lg" onclick=myFunc()>Wanna Buy?</button> -->
                             </div>
+                            <% } else if(post.bidded == true) { %>
+                                
+                                <div class="sell-section">
+                                    <a href="" class="btn btn-lg btn-primary">Unsold, Auction Completed!</a>
+                                    <!-- <button class="btn btn-primary btn-lg" onclick=myFunc()>Wanna Buy?</button> -->
+                                </div>
+                            <% } else { %>
+                                <div class="sell-section">
+                                    <a href="/painting1/<%= post.id %>" class="btn btn-lg btn-primary">Buy</a>
+                                    <!-- <button class="btn btn-primary btn-lg" onclick=myFunc()>Wanna Buy?</button> -->
+                                </div>
+                            <% } %>
                         </div>
                     </div>
                 </div>
@@ -84,6 +144,13 @@
         </div>
     </div>
     <script>
+
+        $(function(){
+	$(document).one('click', '.like-review', function(e) {
+		//$(this).html('<i class="fa fa-heart" aria-hidden="true"></i>Unlike');
+		$(this).children('.fa-heart').addClass('animate-like');
+	});
+});
         function updateLikes(){
             id = $('.likeC').attr('userId');
             $.post('/like/'+id, function(response){
@@ -91,6 +158,56 @@
             })
 
         }
+
+                
+        // for like btn
+        const like = document.getElementById('like_btn');
+
+        var toggleButtonText = {
+            Like: function (button) {
+                //button.html = '<i class="fa fa-heart" aria-hidden="true"></i>Unlike'
+                button.textContent = "Unlike";
+            },
+            Unlike: function (button) {
+                //button.html = '<i class="fa fa-heart" aria-hidden="true"></i>Like'
+                button.textContent = "Like";
+            }
+        };
+
+        var updatePostStats = {
+            Like: function (postId) {
+                document.querySelector('#likes-count-' + postId).textContent++;
+            },
+            Unlike: function (postId) {
+                document.querySelector('#likes-count-' + postId).textContent--;
+            }
+        };
+
+        const like_func = async (e) => {
+            e.preventDefault();
+            var postId = event.target.dataset.postId;
+
+            var action = event.target.textContent.trim();
+            // console.log(action)
+            toggleButtonText[action](event.target);
+            updatePostStats[action](postId);
+
+            try {
+                const liked = await fetch(`/like/${postId}`, {
+
+                    method: 'PUT',
+                    headers: {
+                        "Content-Type": "application/json",
+                    }
+                })
+                console.log(liked.json())
+            }
+            catch (err) {
+                console.log('err')
+            }
+        };
+
+
     </script>
 </body>
 </html>

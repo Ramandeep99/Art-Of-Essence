@@ -36,12 +36,10 @@ module.exports.uploadPost = function(req, res){
                 start_bid_date : start_bid_date
              }, function(err, painting){
                 if(err){console.log('err', err); return;}
-                
                 painting.save();
                 return res.render('afterPostUpload')
              })
         })
-
     })
     })
 }
